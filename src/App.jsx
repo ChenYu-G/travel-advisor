@@ -8,11 +8,10 @@ import Map from "./components/Map/Map";
 import { getPlacesData } from "./api/index";
 
 const App = () => {
-  console.log("App");
-
   const [places, setPlaces] = useState([]);
   const [coordinates, setCoordinates] = useState({});
-  const [bounds, setBounds] = useState(null);
+  const [bounds, setBounds] = useState({});
+  const [childClicked, setChildClicked] = useState(null);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -22,11 +21,16 @@ const App = () => {
     );
   }, []);
 
-  useEffect(() => {
-    getPlacesData().then((data) => {
-      setPlaces(data);
-    });
-  }, [coordinates, bounds]);
+  useEffect(
+    () => {
+      getPlacesData(bounds.sw, bounds.ne).then((data) => {
+        console.log(data);
+        setPlaces(data);
+      });
+    },
+    [coordinates]
+    // [coordinates, bounds]
+  );
 
   return (
     <>
@@ -34,13 +38,15 @@ const App = () => {
         <Header />
         <Grid container spacing={3} style={{ width: "100%" }}>
           <Grid item xs={12} md={4}>
-            <List />
+            <List places={places} setChildClicked={setChildClicked} />
           </Grid>
           <Grid item xs={12} md={8}>
             <Map
               setBounds={setBounds}
               setCoordinates={setCoordinates}
               coordinates={coordinates}
+              places={places}
+              setChildClicked={setChildClicked}
             />
           </Grid>
         </Grid>

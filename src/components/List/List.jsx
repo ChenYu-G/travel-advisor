@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect, createRef } from "react";
 import {
   CircularProgress,
   Grid,
@@ -12,24 +12,18 @@ import {
 import PlaceDetails from "../PlaceDetails/PlaceDetails";
 import useStyles from "./styles";
 
-const List = () => {
+const List = ({ places, setChildClicked }) => {
   const classes = useStyles();
   const [type, setType] = useState("restaurants");
   const [rating, setRating] = useState("");
-  const places = [
-    { name: "Cool Place" },
-    { name: "Cool Beer" },
-    { name: "Cool Steak" },
-    { name: "Cool Place" },
-    { name: "Cool Beer" },
-    { name: "Cool Steak" },
-    { name: "Cool Place" },
-    { name: "Cool Beer" },
-    { name: "Cool Steak" },
-    { name: "Cool Place" },
-    { name: "Cool Beer" },
-    { name: "Cool Steak" },
-  ];
+  const [elRefs, setElRefs] = useState([]);
+
+  useEffect(() => {
+    const refs = Array(places.length)
+      .fill()
+      .map((_, i) => refs[i] || createRef());
+    setElRefs(refs);
+  }, [places]);
 
   return (
     <div className={classes.container}>
@@ -55,8 +49,12 @@ const List = () => {
       </FormControl>
       <Grid container spacing={3} className={classes.list}>
         {places?.map((place, index) => (
-          <Grid item key={index} xs={12}>
-            <PlaceDetails place={place} />
+          <Grid ref={elRefs[i]} item key={index} xs={12}>
+            <PlaceDetails
+              place={place}
+              selected={Number(childClicked === i)}
+              refProp={elRefs[i]}
+            />
           </Grid>
         ))}
       </Grid>
