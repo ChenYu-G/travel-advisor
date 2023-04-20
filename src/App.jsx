@@ -25,30 +25,36 @@ const App = () => {
     );
   }, []);
 
-  useEffect(() => {
-    const filtered = places.filter((place) => {
-      place.rating > rating;
-    });
-    setFilteredPlaces(filtered);
-  }, [rating]);
-
   useEffect(
     () => {
-      setIsLoading(true);
-      getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
-        setPlaces(data);
-        setIsLoading(false);
-        setRating("");
-      });
+      if (bounds.sw && bounds.ne) {
+        setIsLoading(true);
+        getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
+          // remove the ad content
+          setPlaces(
+            data?.filter((place) => place.name && place.num_reviews > 0)
+          );
+          setFilteredPlaces([]);
+          setIsLoading(false);
+          setRating("");
+        });
+      }
     },
-    [type, coordinates]
+    [type, bounds]
     // [coordinates, bounds]
   );
+
+  useEffect(() => {
+    const filtered = places.filter((place) => Number(place.rating) >= rating);
+
+    console.log(filtered);
+    setFilteredPlaces(filtered);
+  }, [rating]);
 
   return (
     <>
       <CssBaseline>
-        <Header />
+        <Header setCoordinates={setCoordinates} />
         <Grid container spacing={3} style={{ width: "100%" }}>
           <Grid item xs={12} md={4}>
             <List

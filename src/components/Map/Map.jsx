@@ -6,6 +6,7 @@ import Rating from "@material-ui/lab/Rating";
 
 import useStyles from "./styles.js";
 import { useState } from "react";
+import mapStyle from "./mapStyle.js";
 
 const Map = ({
   setCoordinates,
@@ -24,8 +25,12 @@ const Map = ({
         defaultCenter={{ lat: 10, lng: 10 }}
         center={coordinates}
         defaultZoom={14}
+        options={{
+          disableDefaultUI: true,
+          zoomControl: true,
+          styles: mapStyle,
+        }}
         margin={[50, 50, 50, 50]}
-        options={{}}
         onChange={(e) => {
           setCoordinates({ lat: e.center.lat, lng: e.center.lng });
           setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
