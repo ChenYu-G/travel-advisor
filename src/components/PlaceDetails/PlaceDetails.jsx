@@ -16,6 +16,9 @@ import useStyles from "./styles";
 
 const PlaceDetails = ({ place, selected, refProp }) => {
   const classes = useStyles();
+
+  if (selected)
+    refProp?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   return (
     <Card elevation={6}>
       <CardMedia
@@ -48,7 +51,7 @@ const PlaceDetails = ({ place, selected, refProp }) => {
         {place?.awards?.map((award) => (
           <Box my={1} display="flex" justifyContent="space-between">
             <img src={award.images.small} alt={award.display_name} />
-            <Typography variant="subtitle2" color="textSecondery">
+            <Typography variant="subtitle2" color="textSecondary">
               {award.display_name}
             </Typography>
           </Box>
