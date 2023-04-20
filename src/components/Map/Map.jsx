@@ -30,7 +30,9 @@ const Map = ({
           setCoordinates({ lat: e.center.lat, lng: e.center.lng });
           setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
         }}
-        onChildClick={(child) => {}}
+        onChildClick={(child) => {
+          setChildClicked(child);
+        }}
         places={places}
       >
         {places?.map((place, i) => (
