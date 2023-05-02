@@ -26,32 +26,28 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		const filtered = places.filter((place) => {
-			place.rating > rating
-		})
+		const filtered = places.filter((place) => Number(place.rating) > rating)
 		setFilteredPlaces(filtered)
 	}, [rating])
 
-	useEffect(
-		() => {
-			const timer = setTimeout(() => {
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			if (bounds) {
 				setIsLoading(true)
+
 				getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
-					setPlaces(data)
-					setIsLoading(false)
+					setPlaces(data.filter((place) => place.name && place.num_reviews > 0))
+					setFilteredPlaces([])
 					setRating('')
-					console.log(data)
+					setIsLoading(false)
 				})
-			}, 1000)
-
-			return () => {
-				clearTimeout(timer)
 			}
-		},
+		}, 1000)
 
-		[type, coordinates]
-		// [coordinates, bounds]
-	)
+		return () => {
+			clearTimeout(timer)
+		}
+	}, [type, coordinates])
 
 	return (
 		<>
